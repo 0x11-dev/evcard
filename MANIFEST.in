@@ -1,0 +1,10 @@
+# 导入根目录下满足*.txt的文件
+include *.txt evcard/*.yml
+include LICENSE
+include requirements.txt
+
+# 递归导入examples目录下满足*.txt和*.py的文件
+#recursive-include examples *.txt *.py
+
+# 导入满足examples/sample?/build的文件夹下所有文件
+#prune examples/sample?/build

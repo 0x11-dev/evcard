@@ -1,0 +1,34 @@
+syntax = "proto2";
+
+package pb; 
+
+message RdsModelProtobuf {  
+// key:库名.表名
+optional string key=1;
+// 主键列表，逗号分隔
+optional string primaryKeys=2;
+// 操作INSERT，UPDATE,DELETE
+optional string opt=3;
+// 属性列表
+repeated TbField fieldList=4;
+}
+
+message TbField {  
+// 字段名
+optional string fieldname=1;
+// 编码方式
+optional string encoding=2;
+// 数据类型
+optional string type=3;
+// byte类型的值
+optional TbByteString tbByteString=4;
+}
+
+message TbByteString {  
+// byte[]类型的值长度
+optional int32 len=1;
+// byte[]的值
+optional bytes bytes=2;
+}
+
+
