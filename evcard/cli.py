@@ -45,11 +45,15 @@ def version_msg():
     help=u'task'
 )
 @click.option(
+    '-c', '--ddl',
+    is_flag=True, help='Print create table statements', default=False
+)
+@click.option(
     u'--target', type=click.Choice(['order', 'vehicle', 'shop', 'member', 'month']),
     help=u'target'
 )
 @click.argument('date')
-def main(verbose, config_file, default_config, task, target, date):
+def main(verbose, ddl, config_file, default_config, task, target, date):
 
     get_user_config(
         config_file=config_file,
@@ -64,7 +68,7 @@ def main(verbose, config_file, default_config, task, target, date):
         subscribe()
     elif task == 'desen':
         from evcard.desensitization import goo
-        goo()
+        goo(ddl)
         return
     elif task == 'sample':
         from evcard.sample import go_sample

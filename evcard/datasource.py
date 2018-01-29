@@ -14,7 +14,7 @@ redis_pool = redis.ConnectionPool(host=redis_config['host'],
 # rdb = redis.ConnectionPool(connection_class=redis.UnixDomainSocketConnection, path="/var/run/redis/redis.sock")
 
 impala_config = user_config['impala']
-# kudu_conn = connect(host='10.20.140.11', port=21050)
+# kudu_conn = connect(host='10.20.140.11',port=21050,auth_mechanism='PLAIN',user='duba',password='duba@2017')
 
 
 def get_impala_connection():

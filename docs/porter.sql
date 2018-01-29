@@ -278,13 +278,6 @@ SELECT
 from data03.org_info;
 
 
-
-
-
-
-
-
-
 upsert into vehicle_offline_info(
 	offline_seq,vin,status,off_time,recover_time,recover_user,off_type,remark,created_user,created_time,updated_user,updated_time
 )
@@ -307,3 +300,266 @@ select
 	cast(assess_type as tinyint),
 	created_time,updated_time
 from evcard_tmp.assess_info;
+
+
+upsert into kafka_porter.mmp_credit_event_record (
+  id,auth_id,order_seq,event_type_id,event_desc,event_source,event_name,event_file_path,
+  event_image_path,event_nature,amount,black_list,misc_desc,status,create_time,update_time
+)
+SELECT
+  id,
+  auth_id,
+  order_seq,
+  event_type_id,
+  event_desc,
+  event_source,
+  event_name,
+  event_file_path,
+  event_image_path,
+  event_nature,
+  cast(amount as int),
+  cast(black_list as tinyint),
+  misc_desc,
+  cast(status as int),
+  create_time,
+  update_time
+FROM
+
+
+upsert into mmp_credit_event_type (
+  id,event_name,event_nature,amount,event_desc,event_way,
+  black_list,misc_desc,status,create_time,update_time
+)
+SELECT
+  id,event_name,event_nature,
+  cast(amount as int),
+  event_desc,
+  cast(event_way as int),cast(black_list as tinyint),
+  misc_desc,
+  cast(status as int),
+  create_time,update_time
+FROM data03.mmp_credit_event_type;
+
+
+upsert into mmp_credit_event_type_report (
+  id,year_num,org_id,`type`,event_type_id,event_name,
+  `month`,total,misc_desc,status,create_time,update_time
+)
+SELECT
+  id,
+  year_num,
+  org_id,
+  cast(`type` as int),
+  event_type_id,
+  event_name,
+  cast(`month` as int),
+  cast(total as int),
+  misc_desc,
+  cast(status as int),
+  create_time,
+  update_time
+FROM
+
+
+upsert into kafka_porter.mmp_user_tag (
+  id,auth_id,real_amount,effective_contd,remark,create_time,update_time,credit_amount
+)
+SELECT
+  id,
+  auth_id,
+  real_amount,
+  effective_contd,
+  remark,
+  create_time,
+  update_time,
+  credit_amount
+FROM
+
+
+upsert into kafka_porter.ids_dispatch_task (
+  id,dispatch_task_seq,problem_type_id,region_id,province_id,city_id,area_id,place,auth_id,priority,
+  order_seq,remark,dispatch_task_status,shop_seq,shop_name,vin,misc_desc,status,create_time,update_time,
+  create_role,user_origin,vehicle_no,end_time,vehicle_model_seq,vehicle_model_info,report_time,
+  report_reason,task_location,proc_inst_id,city_name,province_name,area_name,task_assign_time,
+  task_cancel_time,region_name,related_task_seq,online_shop_name,start_time,org_id,no_restrictive_road_fee,
+  restrictive_road_fee,park_fee,vehicle_allotment_num,vehicle_allotmented_num,vehicle_allotmenting_num,
+  vehicle_allotment_shop_address,vehicle_allotment_shop_seq,vehicle_allotment_region,vehicle_allotment_region_id,
+  vehicle_allotment_area,vehicle_allotment_area_id,vehicle_model_seq_list,vehicle_allotment_vehicle_no,
+  vehicle_allotment_end_time,vehicle_allotment_shop_name,inspector_handle_result,is_setting_trouble,
+  is_need_complete,clean_time_upper_limit,clean_time_lower_limit,clean_count,cleaning_count,
+  cleaned_count,task_end_time,inspector_call_time,vehicle_operation_org_id
+)
+SELECT
+  id,
+  dispatch_task_seq,
+  problem_type_id,
+  region_id,
+  province_id,
+  city_id,
+  area_id,
+  place,
+  auth_id,
+  cast(priority as tinyint),
+  order_seq,
+  remark,
+  cast(dispatch_task_status as int),
+  cast(shop_seq as int),
+  shop_name,
+  vin,
+  misc_desc,
+  cast(status as int),
+  create_time,
+  update_time,
+  create_role,
+  user_origin,
+  vehicle_no,
+  end_time,
+  vehicle_model_seq,
+  vehicle_model_info,
+  report_time,
+  report_reason,
+  task_location,
+  proc_inst_id,
+  city_name,
+  province_name,
+  area_name,
+  task_assign_time,
+  task_cancel_time,
+  region_name,
+  related_task_seq,
+  online_shop_name,
+  start_time,
+  org_id,
+  no_restrictive_road_fee,
+  restrictive_road_fee,
+  park_fee,
+  vehicle_allotment_num,
+  vehicle_allotmented_num,
+  vehicle_allotmenting_num,
+  vehicle_allotment_shop_address,
+  vehicle_allotment_shop_seq,
+  vehicle_allotment_region,
+  vehicle_allotment_region_id,
+  vehicle_allotment_area,
+  vehicle_allotment_area_id,
+  vehicle_model_seq_list,
+  vehicle_allotment_vehicle_no,
+  vehicle_allotment_end_time,
+  vehicle_allotment_shop_name,
+  inspector_handle_result,
+  cast(is_setting_trouble as int),
+  cast(is_need_complete as int),
+  cast(clean_time_upper_limit as int),
+  cast(clean_time_lower_limit as int),
+  cast(clean_count as int),
+  cast(cleaning_count as int),
+  cast(cleaned_count as int),
+  task_end_time,
+  inspector_call_time,
+  vehicle_operation_org_id
+FROM
+
+upsert into vehicle_dtc (
+  dtc_seq,vin,trip_id,dtc,dtc_property,dtc_cnt,dtc_flag,dtc_time,
+  status,remark,address,created_time,updated_time,dtc_class_id
+)
+SELECT
+  cast(dtc_seq as int),
+  vin,
+  cast(trip_id as int),
+  dtc,
+  cast(dtc_property as int),cast(dtc_cnt as int),cast(dtc_flag as int),
+  dtc_time,status,remark,address,created_time,updated_time,dtc_class_id
+FROM data03.vehicle_dtc;
+
+
+upsert into coupon_def(
+  coupon_seq,rule_seq,coupon_type,org_id,time_type,start_time,end_time,min_amount,coupon_value,des,
+  img_url_ios,img_url_android,pickshop_seq,img_url_ios_exp,img_url_android_exp,returnshop_seq,
+  vehicle_modle,vehicle_no,service_type,valid_time_type,valid_days,start_date,expires_date,coupon_name,
+  coupon_des,create_time,create_name,effective_days
+)
+SELECT
+coupon_seq,
+rule_seq,
+cast(coupon_type as smallint),
+org_id,
+cast(time_type as int),
+start_time,
+end_time,
+min_amount,
+coupon_value,
+des,
+img_url_ios,
+img_url_android,
+pickshop_seq,
+img_url_ios_exp,
+img_url_android_exp,
+returnshop_seq,
+vehicle_modle,
+vehicle_no,
+cast(service_type as int),
+cast(valid_time_type as int),
+cast(valid_days as int),
+start_date,
+expires_date,
+coupon_name,
+coupon_des,
+create_time,
+create_name,
+cast(effective_days as int)
+FROM
+
+
+upsert into user_coupon_list(
+  user_coupon_seq,auth_id,coupon_seq,start_date,expires_date,status,created_time,created_user,updated_time,
+  updated_user,coupon_origin,coupon_code,crm_user_coupon_seq,exchangetime,remark,offer_type,action_id
+)
+SELECT
+user_coupon_seq,
+auth_id,
+coupon_seq,
+start_date,
+expires_date,
+cast(status as tinyint),
+created_time,
+created_user,
+updated_time,
+updated_user,
+coupon_origin,
+coupon_code,
+cast(crm_user_coupon_seq as int),
+exchangetime,
+remark,
+cast(offer_type as int),
+action_id
+FROM
+
+
+upsert into kafka_porter.app_key_manager(
+  app_key,app_secret,request_app_key,plat_name,request_app_secret,post_url,class_name,org_id,remark,
+  status,auto_regist,login_restrict,auto_pay,enjoy_benefit,upload_order,`type`,created_time,
+  created_user,updated_time,updated_user
+)
+SELECT
+app_key,
+app_secret,
+request_app_key,
+plat_name,
+request_app_secret,
+post_url,
+class_name,
+org_id,
+remark,
+cast(status as tinyint),
+cast(auto_regist as tinyint),
+cast(login_restrict as tinyint),
+cast(auto_pay as tinyint),
+cast(enjoy_benefit as tinyint),
+cast(upload_order as tinyint),
+cast(`type` as tinyint),
+created_time,
+created_user,
+updated_time,
+updated_user
+FROM

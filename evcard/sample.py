@@ -12,7 +12,6 @@ desen_version = int(arrow.now().format('YYMMDDHHmm'))
 
 user_config = get_config()
 sample_config = user_config['sample']
-schema_config = user_config['schema']
 
 
 def go_sample(from_date=None, to_date=None):
@@ -32,7 +31,7 @@ def go_sample(from_date=None, to_date=None):
     for table in tables:
         logger.info('copying %s...', table)
 
-        columns = schema_config.get(table, [])
+        columns = _parse_table(table)
         conditions = sample_config.get(table)
 
         from_columns = '{},{} as desen_version'.format(','.join(columns), desen_version)
@@ -54,7 +53,7 @@ def go_sample(from_date=None, to_date=None):
 
 def copy_membership_info():
     logger.info('copying membership_info...')
-    columns = schema_config.get('membership_info', [])
+    columns = _parse_table('membership_info')
 
     from_columns = '{},{} as desen_version'.format(','.join(columns), desen_version)
     to_columns = '{},desen_version'.format(','.join(columns))
@@ -78,7 +77,7 @@ def copy_membership_info():
 def copy_agency_info():
     logger.info('copying agency_info...')
 
-    columns = schema_config.get('agency_info', [])
+    columns = _parse_table('agency_info')
 
     from_columns = '{},{} as desen_version'.format(','.join(columns), desen_version)
     to_columns = '{},desen_version'.format(','.join(columns))
@@ -110,3 +109,15 @@ def _execute(table, statement, parameters=None):
                 desen_version)
 
             cursor.execute(delete_statement)
+
+
+def _parse_table(table):
+    _statement = 'SELECT * FROM {}.{} WHERE 1=0'.format(sample_config.get('source_database'), table)
+
+    with get_impala_connection() as impala_conn:
+        with impala_conn.cursor() as cursor:
+            cursor.execute(_statement)
+            origin_columns = [m[0] for m in cursor.description]
+
+    origin_columns.remove('desen_version')
+    return origin_columns

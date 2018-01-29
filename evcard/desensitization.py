@@ -13,7 +13,6 @@ from . import common as comm
 logger = logging.getLogger(__name__)
 
 user_config = get_config()
-schema_config = user_config['schema']
 desen_config = user_config['desensitization']
 
 id_card_pattern = r'^([1-9]\d{5}[12]\d{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])\d{3}[0-9xX])$'
@@ -26,7 +25,7 @@ convert_columns = list()
 desen_version = int(arrow.now().format('YYMMDDHHmm'))
 
 
-def goo():
+def goo(ddl):
     global encrypt_columns
     global convert_columns
 
@@ -36,24 +35,42 @@ def goo():
     kudu_port = user_config.get('kudu').get('port', 7051)
     kudu_client = kudu.connect(host=kudu_host, port=kudu_port)
 
+    summary = {}
     tables = desen_config.get('tables')
     for table in tables:
         logger.info('copying %s...', table)
 
-        columns = schema_config.get(table, [])
         table_config = desen_config.get(table)
+        primary_key = table_config.get('primary_key', 'uuid') if table_config else 'uuid'
+        exclude_columns = table_config.get('exclude_columns', []) if table_config else []
+
+        schema = _parse_table(table, primary_key, exclude_columns)
+        columns = schema[0]
+
+        if ddl:
+            print(columns)
+            logger.info(schema[1])
+            continue
+
         encrypt_columns = table_config.get('encrypt_columns', []) if table_config else []
         convert_columns = table_config.get('convert_columns', []) if table_config else []
 
         if encrypt_columns or convert_columns:
-            _copy_to_kudu(kudu_client, table)
+            count = _copy_to_kudu(kudu_client, table, primary_key, columns)
+            summary[table] = count
         else:
             from_columns = '{},{} as desen_version'.format(','.join(columns), desen_version)
             to_columns = '{},desen_version'.format(','.join(columns))
+            if primary_key == 'uuid':
+                from_columns = 'uuid(),{}'.format(from_columns)
+                to_columns = '{},{}'.format(primary_key, to_columns)
+
+            source_table = table + '_' + desen_config.get('source_suffix') if desen_config.get('source_suffix') else table
+            target_table = table + '_' + desen_config.get('target_suffix') if desen_config.get('target_suffix') else table
 
             copy_statement = 'UPSERT INTO {}.{}({}) SELECT {} FROM {}.{}'.format(
-                desen_config.get('target_database'), table, to_columns,
-                from_columns, desen_config.get('source_database'), table
+                desen_config.get('target_database'), target_table, to_columns,
+                from_columns, desen_config.get('source_database'), source_table
             )
             logger.debug(copy_statement)
 
@@ -64,7 +81,7 @@ def goo():
         logger.info('%s(version=%d) finished.', table, desen_version)
 
 
-def _copy_to_kudu(kudu_client, table_name):
+def _copy_to_kudu(kudu_client, table_name, primary_key, columns):
     if desen_config.get('target_suffix'):
         table = kudu_client.table('impala::{}.{}_{}'.format(desen_config.get('target_database'), table_name, desen_config.get('target_suffix')))
     else:
@@ -72,10 +89,12 @@ def _copy_to_kudu(kudu_client, table_name):
 
     session = kudu_client.new_session()
 
-    columns = schema_config.get(table_name, [])
     copy_columns = columns.copy() + [col for col in convert_columns if col not in columns]
+    if primary_key == 'uuid':
+        copy_columns.append('uuid() as uuid')
 
-    query_statement = 'SELECT {} FROM {}.{}'.format(','.join(copy_columns), desen_config.get('source_database'), table_name)
+    source_table = table_name + '_' + desen_config.get('source_suffix') if desen_config.get('source_suffix') else table_name
+    query_statement = 'SELECT {} FROM {}.{}'.format(','.join(copy_columns), desen_config.get('source_database'), source_table)
     logger.debug(query_statement)
 
     with get_impala_connection() as impala_conn:
@@ -146,3 +165,42 @@ def _parse_id_card(id_card):
         return id_card[6:14], '1' if int(id_card[16]) % 2 == 0 else '0'
     else:
         return None, None
+
+
+def _parse_table(table, primary_key, exclude_columns=[]):
+    source_table = table + '_' + desen_config.get('source_suffix') if desen_config.get('source_suffix') else table
+    _statement = 'SELECT * FROM {}.{} WHERE 1=0'.format(desen_config.get('source_database'), source_table)
+
+    target_table = table + '_' + desen_config.get('target_suffix') if desen_config.get('target_suffix') else table
+
+    _columns = list()
+    if primary_key == 'uuid':
+        _columns.append('uuid STRING NOT NULL,')
+
+    with get_impala_connection() as impala_conn:
+        with impala_conn.cursor() as cursor:
+            cursor.execute(_statement)
+            origin_columns = [(m[0], m[1]) for m in cursor.description if m[0] not in exclude_columns]
+            for col in origin_columns:
+                if col[0] == primary_key:
+                    _columns.append('{} {} NOT NULL,'.format(col[0], col[1]))
+                else:
+                    _columns.append('{} {},'.format(col[0], col[1]))
+
+    create_statement = '''
+CREATE TABLE {db}.{table} (
+{cols}
+desen_version INT NOT NULL DEFAULT 0,
+PRIMARY KEY({pk})
+)
+PARTITION BY HASH ({pk}) PARTITIONS 10
+STORED AS KUDU;
+    '''.format(
+        db=desen_config.get('target_database'),
+        table=target_table,
+        cols='\n'.join(_columns),
+        pk=primary_key
+    )
+
+    return [col[0] for col in origin_columns], create_statement
+
