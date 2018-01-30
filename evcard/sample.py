@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 desen_version = int(arrow.now().format('YYMMDDHHmm'))
 
 user_config = get_config()
+rule_config = user_config['rule']
 sample_config = user_config['sample']
 
 
@@ -32,7 +33,8 @@ def go_sample(from_date=None, to_date=None):
         logger.info('copying %s...', table)
 
         columns = _parse_table(table)
-        conditions = sample_config.get(table)
+        table_config = rule_config.get(table)
+        conditions = table_config.get('condition')
 
         from_columns = '{},{} as desen_version'.format(','.join(columns), desen_version)
         to_columns = '{},desen_version'.format(','.join(columns))

@@ -29,54 +29,6 @@ sample:
   target_database: sample
   date_range: {begin_date: '20170101', end_date: '20170401'}
   tables: [membership_info,vehicle_info,shop_info,iss_shop_fix,agency_info,org_info,iss_fix_type,vehicle_model,order_price_detail,province,city,area,ids_dispatch_task,vehicle_dtc,assess_info,vehicle_offline_info,order_info]
-  order_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  shop_info: org_id='000T'
-  vehicle_info: org_id='000T'
-  order_price_detail: strleft(created_time,10)>=%(begin_date_l)s and strleft(created_time,10)<%(end_date_l)s
-  ids_dispatch_task: strleft(create_time,10)>=%(begin_date_l)s and strleft(create_time,10)<%(end_date_l)s
-  vehicle_dtc: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  iss_shop_fix: strleft(create_time,10)>=%(begin_date_l)s and strleft(create_time,10)<%(end_date_l)s
-  assess_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  vehicle_offline_info: strleft(created_time,8)>=%(begin_date_l)s and strleft(created_time,8)<%(end_date_l)s
-  org_info: org_class=2
-  iss_fix_type: org_id='000T'
-  vehicle_model: vehicle_model_info in ('荣威ERX5','荣威E50','奇瑞EQ','之诺1E','宝马i3','SPRINGO')
-  area:
-  city:
-  province:
-  alarm_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  amount_charge_history: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  amount_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  anonymous_user_info: strleft(data_time,8)>=%(begin_date)s and strleft(data_time,8)<%(end_date)s
-  card_action: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  city_veh_info: pname in ('shanghai','zhejiang')
-  dispatch_task: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  error_code_info:
-  illegal_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  income_range: city_code='108' and range_time>=%(begin_date)s and range_time<%(end_date)s
-  message_history: strleft(send_time,8)>=%(begin_date)s and strleft(send_time,8)<%(end_date)s
-  operationmanage_dailyreport: org_id='000T' and report_date>=%(begin_date_l)s and report_date<%(end_date_l)s
-  order_history: strleft(created_time,10)>=%(begin_date_l)s and strleft(created_time,10)<%(end_date_l)s
-  return_error_list: strleft(ope_time,8)>=%(begin_date)s and strleft(ope_time,8)<%(end_date)s
-  share_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  shop_dailyorder_income: org_id='000T' and income_date>=%(begin_date_l)s and income_date<%(end_date_l)s
-  shop_real_info: cityid=310100
-  shop_vehcnt: strleft(date_time,8)>=%(begin_date)s and strleft(date_time,8)<%(end_date)s
-  tag_info: strleft(create_time,8)>=%(begin_date)s and strleft(create_time,8)<%(end_date)s
-  term_info: org_id='000T'
-  term_model: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  trip_history: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  user_coupon_list: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  user_feedback: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  user_operator_log: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  user_service_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  user_share_reward_info: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-  vehicle_bmw_can: from_unixtime(time_stamp,'yyyyMMdd')>=%(begin_date)s and from_unixtime(time_stamp,'yyyyMMdd')<%(end_date)s
-  vehicle_can: from_unixtime(time_stamp,'yyyyMMdd')>=%(begin_date)s and from_unixtime(time_stamp,'yyyyMMdd')<%(end_date)s
-  vehicle_location: from_unixtime(time_stamp,'yyyyMMdd')>=%(begin_date)s and from_unixtime(time_stamp,'yyyyMMdd')<%(end_date)s
-  vehicle_online_num: strleft(created_time,10)>=%(begin_date_l)s and strleft(created_time,10)<%(end_date_l)s
-  vehicle_remind: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
-
 
 desensitization:
   source_database: evcard_raw
@@ -84,43 +36,54 @@ desensitization:
   target_database: old_rd
   source_suffix: raw
   target_suffix:
-  tables: [alarm_info,anonymous_user_info,city_veh_info,dispatch_task,illegal_info,income_range,operationmanage_dailyreport,shop_real_info,return_error_list,share_info,user_feedback,user_service_info,user_share_reward_info,vehicle_remind,amount_charge_history,amount_info,user_coupon_list,message_history,trip_history,vehicle_bmw_can,card_action,order_history,shop_vehcnt,vehicle_can,vehicle_location]
+  tables: [alarm_info,city_veh_info,dispatch_task,error_code_info,illegal_info,income_range,return_error_list,share_info,shop_vehcnt,tag_info,user_share_reward_info,vehicle_bmw_can,vehicle_can,vehicle_location,vehicle_remind]
+  #tables: [alarm_info,amount_charge_history,amount_info,anonymous_user_info,card_action,city_veh_info,coupon_def,dispatch_task,error_code_info,illegal_info,income_range,message_history,operationmanage_dailyreport,order_history,return_error_list,share_info,shop_dailyorder_income,shop_real_info,shop_vehcnt,tag_info,term_info,term_model,trip_history,user_coupon_list,user_feedback,user_operator_log,user_service_info,user_share_reward_info,vehicle_bmw_can,vehicle_can,vehicle_location,vehicle_online_num,vehicle_remind]
   #tables: [membership_info,vehicle_info,shop_info,iss_shop_fix,agency_info,org_info,iss_fix_type,vehicle_model,order_price_detail,province,city,area,mmp_credit_event_type,mmp_credit_event_type_report,mmp_credit_event_record,mmp_user_tag,ids_dispatch_task,vehicle_dtc,assess_info,vehicle_offline_info,order_info]
+
+rule:
   membership_info:
     primary_key: pk_id
-    exclude_columns: [name,password,mobile_phone,mail,zip,address,auth_kind,certificate_validity,certificate_address,driving_license,obtain_driver_timer,license_expiration_time,user_img_url,driving_license_img_url,identity_card_img_url,emergency_contact,emergency_mobil,guarantee_ic_card,guarantee_mobil,card_no,credit_no,review_user,empno,hold_idcard_pic_url,idcard_pic_url,face_recognition_img_url,created_user,updated_user]
+    exclude_columns: [name,password,driver_code,mobile_phone,mail,zip,address,auth_kind,certificate_validity,certificate_address,driving_license,obtain_driver_timer,license_expiration_time,user_img_url,driving_license_img_url,identity_card_img_url,emergency_contact,emergency_mobil,guarantee_name,guarantee_ic_card_kind,guarantee_ic_card,guarantee_mobil,card_no,credit_no,review_user,empno,hold_idcard_pic_url,idcard_pic_url,face_recognition_img_url,created_user,updated_user]
     encrypt_columns: [auth_id,]
     convert_columns: [driver_code,]
   order_info:
     primary_key: order_seq
     exclude_columns: [card_no,guarantee_mobil,guarantee_name,guarantee_ic_card,guarantee_ic_card_kind,pre_authorised_type,authorization_price,pay_trade_no,add_service_items,illegal_pre_authorised_flg,illegal_pre_authorised_amount,invoice_type,credit_no,settlement_scan_url,check_car_url,rent_scan_url,rent_shoper,account_shoper,created_user,updated_user]
     encrypt_columns: [auth_id,vin]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   shop_info:
     primary_key: shop_seq
     exclude_columns: [shop_manager_id,tel,fax,shop_pic_url,shop_logo_url,created_user,updated_user]
+    condition: org_id='000T'
   vehicle_info:
     primary_key: vin
     exclude_columns: [owner_id,driver_id,engine_id,rtpn,vehicle_nationality,trailer_vin,drivinglicense_img,tci_img,vci_img,tci_img_renewal,vci_img_renewal,drivinglicense_img_deputy,created_user,updated_user]
     encrypt_columns: [vin]
+    condition: org_id='000T'
   order_price_detail:
     primary_key: id
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [auth_id]
+    condition: strleft(created_time,10)>=%(begin_date_l)s and strleft(created_time,10)<%(end_date_l)s
   agency_info:
     primary_key: agency_id
     exclude_columns: [contact,tel,fax,mail,mobile_phone,license_no,license_no_img_url,contract_img_url,tax_registration_img_url,org_code_img_url,created_user,updated_user]
   org_info:
     primary_key: org_id
     exclude_columns: [contact,tel,fax,mail,mobile_phone,address,license_no,corporate,rtoln,license_no_img_url,tax_registration_img_url,org_code_img_url,created_user,updated_user]
+    condition: org_class=2
   vehicle_model:
     primary_key: vehicle_model_seq
     exclude_columns: [vehicle_model_id,body_pic_url,ftpfile,ftpfilesize,picture,created_user,updated_user]
+    condition: vehicle_model_info in ('荣威ERX5','荣威E50','奇瑞EQ','之诺1E','宝马i3','SPRINGO')
   iss_shop_fix:
     primary_key: id
     exclude_columns: [create_oper_id,create_oper_name,update_oper_id,update_oper_name]
+    condition: strleft(create_time,10)>=%(begin_date_l)s and strleft(create_time,10)<%(end_date_l)s
   iss_fix_type:
     primary_key: id
     exclude_columns: [create_oper_id,create_oper_name,update_oper_id,update_oper_name]
+    condition: org_id='000T'
   area:
     primary_key: id
   city:
@@ -145,105 +108,139 @@ desensitization:
     primary_key: id
     exclude_columns: [user_name,user_phone,real_user_name,create_id,create_oper_id,create_oper_name,update_oper_id,update_oper_name,assign_user,member_name]
     encrypt_columns: [auth_id,vin]
+    condition: strleft(create_time,10)>=%(begin_date_l)s and strleft(create_time,10)<%(end_date_l)s
   vehicle_dtc:
     primary_key: dtc_seq
     exclude_columns: [recover_user,created_user,updated_user]
     encrypt_columns: [vin]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   vehicle_offline_info:
     primary_key: offline_seq
     exclude_columns: [recover_user,created_user,updated_user]
     encrypt_columns: [vin]
+    condition: strleft(created_time,8)>=%(begin_date_l)s and strleft(created_time,8)<%(end_date_l)s
   assess_info:
     primary_key: assess_seq
     exclude_columns: [imageurl_assess_info]
     encrypt_columns: [auth_id]
-
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   alarm_info:
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [vin]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   amount_charge_history:
     primary_key: out_trade_seq
     exclude_columns: [seller_email,buyer_email]
     encrypt_columns: [auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   amount_info:
     primary_key: amount_info_seq
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   anonymous_user_info:
+    condition: strleft(data_time,8)>=%(begin_date)s and strleft(data_time,8)<%(end_date)s
   card_action:
     primary_key: action_seq
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [vin]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   city_veh_info:
+    condition: pname in ('shanghai','zhejiang')
   coupon_def:
     primary_key: coupon_seq
   dispatch_task:
     primary_key: dispatch_task_seq
     exclude_columns: [user_name,user_phone,created_user,updated_user,inspect_id]
     encrypt_columns: [vin,auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   error_code_info:
     primary_key: error_code
   illegal_info:
     primary_key: illegal_seq
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [vin]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   income_range:
+    condition: city_code='108' and range_time>=%(begin_date)s and range_time<%(end_date)s
   message_history:
     primary_key: message_seq
     exclude_columns: [created_user]
     encrypt_columns: [vin]
+    condition: strleft(send_time,8)>=%(begin_date)s and strleft(send_time,8)<%(end_date)s
   operationmanage_dailyreport:
     exclude_columns: [created_user,updated_user]
+    condition: org_id='000T' and report_date>=%(begin_date_l)s and report_date<%(end_date_l)s
   order_history:
     exclude_columns: [created_user]
+    condition: strleft(created_time,10)>=%(begin_date_l)s and strleft(created_time,10)<%(end_date_l)s
   return_error_list:
+    condition: strleft(ope_time,8)>=%(begin_date)s and strleft(ope_time,8)<%(end_date)s
   share_info:
     primary_key: share_id
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [old_authid]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   shop_dailyorder_income:
     primary_key: id
+    condition: org_id='000T' and income_date>=%(begin_date_l)s and income_date<%(end_date_l)s
   shop_real_info:
     primary_key: shop_real_seq
     exclude_columns: [created_user,updated_user]
+    condition: cityid=310100
   shop_vehcnt:
+    condition: strleft(date_time,8)>=%(begin_date)s and strleft(date_time,8)<%(end_date)s
   tag_info:
     primary_key: id
+    condition: strleft(create_time,8)>=%(begin_date)s and strleft(create_time,8)<%(end_date)s
   term_info:
     primary_key: sys_term_id
     exclude_columns: [created_user,updated_user]
+    condition: org_id='000T'
   term_model:
     exclude_columns: [created_user,updated_user]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   trip_history:
     encrypt_columns: [vin]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   user_coupon_list:
     primary_key: user_coupon_seq
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   user_feedback:
     primary_key: user_feedback_seq
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   user_operator_log:
     primary_key: log_seq
     exclude_columns: [created_user]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   user_service_info:
     primary_key: user_service_seq
     exclude_columns: [created_user,updated_user]
     encrypt_columns: [auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   user_share_reward_info:
     primary_key: user_share_reward_info_seq
     exclude_columns: [orgin_username,orgin_mobile_phone,created_user,updated_user]
     encrypt_columns: [auth_id,orgin_auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
   vehicle_bmw_can:
     encrypt_columns: [vin]
+    condition: from_unixtime(time_stamp,'yyyyMMdd')>=%(begin_date)s and from_unixtime(time_stamp,'yyyyMMdd')<%(end_date)s
   vehicle_can:
     encrypt_columns: [vin]
+    condition: from_unixtime(time_stamp,'yyyyMMdd')>=%(begin_date)s and from_unixtime(time_stamp,'yyyyMMdd')<%(end_date)s
   vehicle_location:
     encrypt_columns: [vin]
+    condition: from_unixtime(time_stamp,'yyyyMMdd')>=%(begin_date)s and from_unixtime(time_stamp,'yyyyMMdd')<%(end_date)s
   vehicle_online_num:
     primary_key: vehicle_online_seq
+    condition: strleft(created_time,10)>=%(begin_date_l)s and strleft(created_time,10)<%(end_date_l)s
   vehicle_remind:
     primary_key: remind_seq
     encrypt_columns: [auth_id]
+    condition: strleft(created_time,8)>=%(begin_date)s and strleft(created_time,8)<%(end_date)s
 

@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 user_config = get_config()
 desen_config = user_config['desensitization']
+rule_config = user_config['rule']
 
 id_card_pattern = r'^([1-9]\d{5}[12]\d{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])\d{3}[0-9xX])$'
 
@@ -40,7 +41,7 @@ def goo(ddl):
     for table in tables:
         logger.info('copying %s...', table)
 
-        table_config = desen_config.get(table)
+        table_config = rule_config.get(table)
         primary_key = table_config.get('primary_key', 'uuid') if table_config else 'uuid'
         exclude_columns = table_config.get('exclude_columns', []) if table_config else []
 
@@ -48,8 +49,7 @@ def goo(ddl):
         columns = schema[0]
 
         if ddl:
-            print(columns)
-            logger.info(schema[1])
+            print(schema[1])
             continue
 
         encrypt_columns = table_config.get('encrypt_columns', []) if table_config else []
